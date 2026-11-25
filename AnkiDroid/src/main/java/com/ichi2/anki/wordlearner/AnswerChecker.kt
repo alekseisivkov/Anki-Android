@@ -63,7 +63,8 @@ object AnswerChecker {
                 forms + forms.map { it.replace(digraph, letter) }
             }
         val best = variants.minBy { distance(expected.lowercase(Locale.GERMAN), it) }
-        return if (expected.first().isUpperCase()) best.replaceFirstChar { it.titlecase(Locale.GERMAN) } else best
+        val sameFirstLetter = best.firstOrNull() == expected.first().lowercaseChar()
+        return if (sameFirstLetter && expected.first().isUpperCase()) best.replaceFirstChar { it.titlecase(Locale.GERMAN) } else best
     }
 
     private fun verdict(

@@ -73,4 +73,10 @@ class AnswerCheckerTest {
         assertEquals("Schlussel", AnswerChecker.check("Schlüssel", "schlussel").typed)
         assertEquals("Abenteuer", AnswerChecker.check("Abenteuer", "abenteuer").typed)
     }
+
+    @Test
+    fun `a typo in the first letter is shown as typed`() {
+        assertEquals("eschichte", AnswerChecker.check("Geschichte", "eschichte").typed)
+        assertEquals("Gechichte", AnswerChecker.check("Geschichte", "gechichte").typed)
+    }
 }

@@ -752,8 +752,16 @@ abstract class AbstractFlashcardViewer :
                 noSuggest -> InputType.TYPE_NULL
                 else -> defaultAnswerFieldInputType ?: field.inputType
             }
-        if (field.inputType != targetInputType) {
+        // in landscape, a fullscreen keyboard would hide the question
+        val targetImeOptions =
+            if (typeAnswer?.forgiving == true) {
+                field.imeOptions or EditorInfo.IME_FLAG_NO_EXTRACT_UI
+            } else {
+                field.imeOptions and EditorInfo.IME_FLAG_NO_EXTRACT_UI.inv()
+            }
+        if (field.inputType != targetInputType || field.imeOptions != targetImeOptions) {
             field.inputType = targetInputType
+            field.imeOptions = targetImeOptions
             getSystemService<InputMethodManager>()?.restartInput(field)
         }
     }
