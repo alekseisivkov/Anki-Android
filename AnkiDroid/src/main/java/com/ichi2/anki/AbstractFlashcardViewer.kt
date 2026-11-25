@@ -746,7 +746,12 @@ abstract class AbstractFlashcardViewer :
         val field = answerField ?: return
         // see ReviewerFragment for why `TYPE_NULL` was selected
         val targetInputType =
-            if (noSuggest) InputType.TYPE_NULL else (defaultAnswerFieldInputType ?: field.inputType)
+            when {
+                // TYPE_NULL is not a text editor: the keyboard would not open on the first card
+                typeAnswer?.forgiving == true -> WORD_INPUT_TYPE
+                noSuggest -> InputType.TYPE_NULL
+                else -> defaultAnswerFieldInputType ?: field.inputType
+            }
         if (field.inputType != targetInputType) {
             field.inputType = targetInputType
             getSystemService<InputMethodManager>()?.restartInput(field)
@@ -2781,6 +2786,12 @@ abstract class AbstractFlashcardViewer :
          */
         const val RESULT_DEFAULT = 50
         const val RESULT_NO_MORE_CARDS = 52
+
+        /** Keyboards do not suggest words for a visible password */
+        private const val WORD_INPUT_TYPE =
+            InputType.TYPE_CLASS_TEXT or
+                InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS or
+                InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
 
         /**
          * Time to wait in milliseconds before resuming fullscreen mode

@@ -1829,9 +1829,9 @@ open class DeckPicker :
      */
     private fun onFinishedStartup() {
         launchCatchingTask {
-            if (withProgress { BundledDeck.importIfNeeded(this@DeckPicker) }) {
-                updateDeckList()
-            }
+            withProgress { BundledDeck.importIfNeeded(this@DeckPicker) }
+            withCol { NewCardMix.prepareToday(this) }
+            updateDeckList()
         }
         launchCatchingTask {
             if (!automaticSync()) {

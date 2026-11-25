@@ -6,6 +6,7 @@ import android.content.Context
 import androidx.core.content.edit
 import anki.import_export.ImportAnkiPackageOptions
 import anki.import_export.ImportAnkiPackageUpdateCondition
+import anki.import_export.ImportResponse
 import com.ichi2.anki.CollectionManager.withCol
 import com.ichi2.anki.common.preferences.sharedPrefs
 import com.ichi2.anki.libanki.Collection
@@ -39,10 +40,22 @@ object BundledDeck {
                     context.assets.open("$DIR/$DECK").use { input -> target.outputStream().use { input.copyTo(it) } }
                 }
             }
-        try {
-            undoableOp { import(this, file) }
-        } finally {
-            file.delete()
+        val complete =
+            try {
+                var skipped = 0
+                undoableOp {
+                    val response = import(this, file)
+                    skipped = response.log.conflictingCount
+                    response.changes
+                }
+                skipped == 0
+            } finally {
+                file.delete()
+            }
+        if (!complete) {
+            // the version is not saved: the next start tries again
+            Timber.e("bundled deck %s was not imported completely", version)
+            return true
         }
         prefs.edit { putString(PREF_VERSION, version) }
         return true
@@ -51,12 +64,13 @@ object BundledDeck {
     private fun import(
         col: Collection,
         file: File,
-    ) = run {
+    ): ImportResponse {
         val isFirstImport = col.decks.byName(WordDeck.ROOT) == null
         val options =
             ImportAnkiPackageOptions
                 .newBuilder()
-                .setMergeNotetypes(false)
+                // a newer deck may have additional fields
+                .setMergeNotetypes(true)
                 .setUpdateNotes(ImportAnkiPackageUpdateCondition.IMPORT_ANKI_PACKAGE_UPDATE_CONDITION_ALWAYS)
                 .setUpdateNotetypes(ImportAnkiPackageUpdateCondition.IMPORT_ANKI_PACKAGE_UPDATE_CONDITION_ALWAYS)
                 .setWithScheduling(false)
@@ -68,7 +82,7 @@ object BundledDeck {
             col.config.set("fsrs", true)
             col.decks.byName(WordDeck.ROOT)?.let { col.decks.select(it.id) }
         }
-        response.changes
+        return response
     }
 
     private fun bundledVersion(context: Context): String? =

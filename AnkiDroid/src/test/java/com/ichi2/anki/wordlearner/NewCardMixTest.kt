@@ -155,4 +155,15 @@ class NewCardMixTest : RobolectricTest() {
         assertFalse(NewCardMix.extend(col))
         assertTrue(assertNotNull(col.decks.getLegacy(did)).isNull("newLimitToday"))
     }
+
+    @Test
+    fun `the portion of the day is prepared without opening the deck`() {
+        addWords(30)
+        addHistory(answers = 20, correct = 5)
+        col.decks.select(1)
+        NewCardMix.prepareToday(col)
+        // not deckDueTree(): it uses the mocked time, but limits are stored for the day of the backend
+        val tree = col.backend.deckTree(now = System.currentTimeMillis() / 1000)
+        assertEquals(4, assertNotNull(col.decks.findDeckInTree(tree, root().id)).newCount)
+    }
 }

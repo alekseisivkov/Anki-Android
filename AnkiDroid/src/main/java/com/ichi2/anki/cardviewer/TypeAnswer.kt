@@ -44,7 +44,8 @@ class TypeAnswer(
         private set
 
     /** Whether [AnswerChecker] is used. The field may contain several accepted forms, separated by `|` */
-    private var forgiving: Boolean = false
+    var forgiving: Boolean = false
+        private set
 
     /** Verdict of [AnswerChecker] on the last answer, `null` if this card is not checked by it */
     var verdict: AnswerChecker.Verdict? = null

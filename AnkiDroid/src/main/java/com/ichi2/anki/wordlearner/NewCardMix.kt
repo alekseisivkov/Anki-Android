@@ -44,10 +44,22 @@ object NewCardMix {
     /** Called before a deck is opened: there is always something to study, unless every word was introduced. */
     fun ensureAvailable(col: Collection) {
         val deck = selectedWordDeck(col) ?: return
+        prepareToday(col, deck)
+        if (col.sched.currentQueueState() == null) extend(col)
+    }
+
+    /** Called when the app starts: the deck list shows the portion with which the session will begin */
+    fun prepareToday(col: Collection) {
+        col.decks.byName(WordDeck.ROOT)?.let { prepareToday(col, it) }
+    }
+
+    private fun prepareToday(
+        col: Collection,
+        deck: Deck,
+    ) {
         if (todaysLimit(col, deck) == null) {
             setLimit(col, deck, introducedToday(col, deck) + portion(success(col)))
         }
-        if (col.sched.currentQueueState() == null) extend(col)
     }
 
     /** Called after an answer */
