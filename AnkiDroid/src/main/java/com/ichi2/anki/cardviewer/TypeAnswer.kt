@@ -219,7 +219,7 @@ class TypeAnswer(
         ) = sb.append(html)
 
         val comparisonText =
-            if (forgiving) {
+            if (forgiving && correct != null) {
                 val result = AnswerChecker.check(correctAnswer, userAnswer)
                 verdict = result.verdict
                 val shown = if (result.verdict == AnswerChecker.Verdict.CORRECT) result.expected else result.typed

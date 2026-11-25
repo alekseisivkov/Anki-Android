@@ -64,4 +64,13 @@ class AnswerCheckerTest {
     @Test
     fun `the closest form is reported`() =
         assertEquals("Architektin", AnswerChecker.check("Architekt|Architektin", "Architektinn").expected)
+
+    @Test
+    fun `accepted differences are not reported as mistakes`() {
+        assertEquals("Abteilungsleitar", AnswerChecker.check("Abteilungsleiter", "abteilungsleitar").typed)
+        assertEquals("Schlüsel", AnswerChecker.check("Schlüssel", "schluesel").typed)
+        assertEquals("üben", AnswerChecker.check("üben", "ueben").typed)
+        assertEquals("Schlussel", AnswerChecker.check("Schlüssel", "schlussel").typed)
+        assertEquals("Abenteuer", AnswerChecker.check("Abenteuer", "abenteuer").typed)
+    }
 }

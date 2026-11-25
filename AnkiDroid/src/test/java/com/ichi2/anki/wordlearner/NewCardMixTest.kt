@@ -98,17 +98,44 @@ class NewCardMixTest : RobolectricTest() {
     }
 
     @Test
-    fun `low success holds new cards back but does not block`() {
+    fun `low success holds new cards back while reviews are due`() {
+        addWords(30)
+        addHistory(answers = 20, correct = 5)
+        makeReviewCardsDue(3)
+        NewCardMix.ensureAvailable(col)
+        answer(Rating.GOOD)
+        NewCardMix.onAnswered(col)
+        assertEquals(0, newCount())
+        assertTrue(assertNotNull(col.sched.currentQueueState()).counts.rev > 0)
+    }
+
+    @Test
+    fun `low success does not cut a portion when no reviews are due`() {
         addWords(30)
         addHistory(answers = 20, correct = 5)
         NewCardMix.ensureAvailable(col)
         assertEquals(4, newCount())
         answer(Rating.EASY)
         NewCardMix.onAnswered(col)
+        assertEquals(3, newCount())
+    }
+
+    @Test
+    fun `buried siblings are used when there is nothing else`() {
+        addWords(2)
+        NewCardMix.ensureAvailable(col)
+        col.sched.buryCards(col.findCards("deck:${WordDeck.ROOT}"), manual = false)
         assertNull(col.sched.currentQueueState())
         assertTrue(NewCardMix.extend(col))
-        assertEquals(4, newCount())
     }
+
+    /** @return the number of cards changed to review cards which are due today */
+    private fun makeReviewCardsDue(count: Int) =
+        col.db.execute(
+            "update cards set type = 2, queue = 2, ivl = 5, due = ?, reps = 3 where id in (select id from cards order by id desc limit ?)",
+            col.sched.today,
+            count,
+        )
 
     @Test
     fun `undo takes back the answer after the portion was extended`() {

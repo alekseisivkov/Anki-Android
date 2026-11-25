@@ -25,7 +25,7 @@ object AnswerChecker {
 
     /**
      * @param expected the accepted form which is closest to the typed text
-     * @param typed the typed text, without a leading article
+     * @param typed the typed text, without a leading article and accepted differences in case and spelling
      */
     data class Result(
         val verdict: Verdict,
@@ -37,6 +37,7 @@ object AnswerChecker {
 
     private val ARTICLE = Regex("^(der|die|das|ein|eine)(\\s*/\\s*(der|die|das))?\\s+(?=\\S)", RegexOption.IGNORE_CASE)
     private val SPACES = Regex("\\s+")
+    private val DIGRAPHS = listOf("ae" to "ä", "oe" to "ö", "ue" to "ü", "ss" to "ß")
 
     /** @param accepted forms separated by `|`, the first one is the canonical form */
     fun check(
@@ -49,7 +50,20 @@ object AnswerChecker {
         val candidates = listOf(raw, raw.replace(ARTICLE, "")).distinct()
         val results = forms.flatMap { form -> candidates.map { Result(verdict(form, it), form, it) } }
         val best = results.minByOrNull { it.verdict.ordinal * 1000 + distance(it.expected.fold(), it.typed.fold()) }
-        return best ?: Result(Verdict.WRONG, accepted, raw)
+        return best?.copy(typed = align(best.expected, best.typed)) ?: Result(Verdict.WRONG, accepted, raw)
+    }
+
+    /** Writes [typed] like [expected] where they differ only in case, or in the spelling of umlauts */
+    private fun align(
+        expected: String,
+        typed: String,
+    ): String {
+        val variants =
+            DIGRAPHS.fold(listOf(typed.lowercase(Locale.GERMAN))) { forms, (digraph, letter) ->
+                forms + forms.map { it.replace(digraph, letter) }
+            }
+        val best = variants.minBy { distance(expected.lowercase(Locale.GERMAN), it) }
+        return if (expected.first().isUpperCase()) best.replaceFirstChar { it.titlecase(Locale.GERMAN) } else best
     }
 
     private fun verdict(

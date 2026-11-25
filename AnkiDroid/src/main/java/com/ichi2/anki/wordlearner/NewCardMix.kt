@@ -2,6 +2,7 @@
 
 package com.ichi2.anki.wordlearner
 
+import anki.scheduler.UnburyDeckRequest
 import com.ichi2.anki.libanki.Collection
 import com.ichi2.anki.libanki.Deck
 import org.json.JSONObject
@@ -54,7 +55,15 @@ object NewCardMix {
         val deck = selectedWordDeck(col) ?: return
         val introduced = introducedToday(col, deck)
         val limit = todaysLimit(col, deck) ?: return
-        if (limit > introduced && holdsNewCards(success(col))) {
+        // without reviews, a held portion would be replaced by another one after every new card
+        val reviewsDue =
+            (
+                col.sched
+                    .currentQueueState()
+                    ?.counts
+                    ?.rev ?: 0
+            ) > 0
+        if (limit > introduced && reviewsDue && holdsNewCards(success(col))) {
             Timber.i("holding new cards back")
             setLimit(col, deck, introduced)
         }
@@ -70,6 +79,9 @@ object NewCardMix {
         val portion = portion(success(col))
         Timber.i("adding %d new cards", portion)
         setLimit(col, deck, introducedToday(col, deck) + portion)
+        if (col.sched.currentQueueState() != null) return true
+        // every word was introduced: go on with the cards which were postponed because of their siblings
+        mergeWithPreviousUndo(col) { col.sched.unburyDeck(deck.id, UnburyDeckRequest.Mode.SCHED_ONLY) }
         return col.sched.currentQueueState() != null
     }
 
@@ -121,10 +133,17 @@ object NewCardMix {
         deck: Deck,
         limit: Int,
     ) {
-        val previousStep = col.undoStatus().lastStep
         deck.put("newLimitToday", JSONObject().put("limit", limit).put("today", col.sched.today))
-        col.decks.save(deck)
-        // "undo" should take back the answer, not this change
+        mergeWithPreviousUndo(col) { col.decks.save(deck) }
+    }
+
+    /** "Undo" should take back the answer, not the change made by [block] */
+    private fun mergeWithPreviousUndo(
+        col: Collection,
+        block: () -> Unit,
+    ) {
+        val previousStep = col.undoStatus().lastStep
+        block()
         if (previousStep != 0) {
             runCatching { col.mergeUndoEntries(previousStep) }.onFailure { Timber.w(it, "undo entries not merged") }
         }
