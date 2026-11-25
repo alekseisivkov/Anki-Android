@@ -11,6 +11,8 @@ import com.ichi2.anki.libanki.Card
 import com.ichi2.anki.libanki.Collection
 import com.ichi2.anki.servicelayer.LanguageHint
 import com.ichi2.anki.servicelayer.LanguageHintService.languageHint
+import com.ichi2.anki.wordlearner.AnswerChecker
+import com.ichi2.anki.wordlearner.WordDeck
 import org.intellij.lang.annotations.Language
 import timber.log.Timber
 import java.util.regex.Matcher
@@ -39,6 +41,13 @@ class TypeAnswer(
      * @see com.ichi2.anki.model.FieldFilters.NoSuggestFilter
      */
     var noSuggest: Boolean = false
+        private set
+
+    /** Whether [AnswerChecker] is used. The field may contain several accepted forms, separated by `|` */
+    private var forgiving: Boolean = false
+
+    /** Verdict of [AnswerChecker] on the last answer, `null` if this card is not checked by it */
+    var verdict: AnswerChecker.Verdict? = null
         private set
 
     /** What the learner actually typed (externally mutable) */
@@ -84,6 +93,8 @@ class TypeAnswer(
         combining = true
         noSuggest = false
         correct = null
+        verdict = null
+        forgiving = WordDeck.isWordCard(col, card)
         val q = card.question(col)
         val m = PATTERN.matcher(q)
         if (!m.find()) {
@@ -207,7 +218,15 @@ class TypeAnswer(
             @Language("HTML") html: String,
         ) = sb.append(html)
 
-        val comparisonText = CollectionManager.compareAnswer(correctAnswer, userAnswer, combining)
+        val comparisonText =
+            if (forgiving) {
+                val result = AnswerChecker.check(correctAnswer, userAnswer)
+                verdict = result.verdict
+                val shown = if (result.verdict == AnswerChecker.Verdict.CORRECT) result.expected else result.typed
+                CollectionManager.compareAnswer(result.expected, shown, combining)
+            } else {
+                CollectionManager.compareAnswer(correctAnswer, userAnswer, combining)
+            }
         append(Matcher.quoteReplacement(comparisonText))
         return m.replaceAll(sb.toString())
     }

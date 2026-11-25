@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Personal fork: the interface of the word trainer is Russian only -->
+<resources>
+    <string name="wordlearner_next" translatable="false">Дальше</string>
+    <string name="wordlearner_actually_correct" translatable="false">Всё-таки верно</string>
+</resources>

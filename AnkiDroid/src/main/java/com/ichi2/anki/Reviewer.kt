@@ -138,6 +138,7 @@ import com.ichi2.anki.utils.ext.getLongOrNull
 import com.ichi2.anki.utils.ext.setUserFlagForCards
 import com.ichi2.anki.utils.ext.showDialogFragment
 import com.ichi2.anki.utils.remainingTime
+import com.ichi2.anki.wordlearner.NewCardMix
 import com.ichi2.themes.Themes
 import com.ichi2.themes.Themes.currentTheme
 import com.ichi2.utils.Permissions.canRecordAudio
@@ -1443,6 +1444,7 @@ open class Reviewer :
         val background = getBackgroundColors(this)
         val textColor = getTextColors(this)
         easeButton1!!.setVisibility(View.VISIBLE)
+        easeButton1!!.setText(R.string.ease_button_again)
         easeButton1!!.setColor(background[0])
         easeButton4!!.setColor(background[3])
         // Ease 2 is "hard"
@@ -1452,6 +1454,7 @@ open class Reviewer :
         easeButton3!!.setup(background[2], textColor[2], R.string.ease_button_good)
         easeButton4!!.setVisibility(View.VISIBLE)
         easeButton3!!.requestFocus()
+        showTypedAnswerButtons()
 
         // Show next review time
         if (shouldShowNextReviewTime()) {
@@ -1463,6 +1466,20 @@ open class Reviewer :
                 easeButton3!!.nextTime = labels[2]
                 easeButton4!!.nextTime = labels[3]
             }
+        }
+    }
+
+    /** A typed word is already graded: continue, or overrule a wrong answer */
+    private fun showTypedAnswerButtons() {
+        val verdict = typeAnswer?.verdict ?: return
+        easeButton2!!.hide()
+        easeButton4!!.hide()
+        if (verdict.accepted) {
+            easeButton1!!.hide()
+            easeButton3!!.setText(R.string.wordlearner_next)
+        } else {
+            easeButton1!!.setText(R.string.wordlearner_next)
+            easeButton3!!.setText(R.string.wordlearner_actually_correct)
         }
     }
 
@@ -1562,6 +1579,7 @@ open class Reviewer :
     override suspend fun updateCurrentCard() {
         val state =
             withCol {
+                if (sched.currentQueueState() == null) NewCardMix.extend(this)
                 sched.currentQueueState()?.apply {
                     topCard.renderOutput(this@withCol, reload = true)
                 }
@@ -1598,6 +1616,8 @@ open class Reviewer :
                 showSnackbar(leechMessage, Snackbar.LENGTH_SHORT)
             }
         }
+
+        withCol { NewCardMix.onAnswered(this) }
 
         // showing the timebox reached dialog if the timebox is reached
         val timebox = withCol { timeboxReached() }

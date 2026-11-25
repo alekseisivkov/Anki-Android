@@ -55,6 +55,12 @@ class EaseButton(
         layout.visibility = visibility
     }
 
+    fun setText(
+        @StringRes text: Int,
+    ) {
+        easeTextView.setText(text)
+    }
+
     fun setColor(color: Int) {
         layout.setBackgroundResource(color)
     }

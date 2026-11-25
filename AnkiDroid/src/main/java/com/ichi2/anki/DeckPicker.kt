@@ -194,6 +194,8 @@ import com.ichi2.anki.utils.ext.setImageDrawableSafe
 import com.ichi2.anki.utils.ext.showDialogFragment
 import com.ichi2.anki.widgets.DeckAdapter
 import com.ichi2.anki.widgets.DeckHierarchyLinesDecoration
+import com.ichi2.anki.wordlearner.BundledDeck
+import com.ichi2.anki.wordlearner.NewCardMix
 import com.ichi2.anki.worker.SyncMediaWorker
 import com.ichi2.anki.worker.SyncWorker
 import com.ichi2.anki.worker.UniqueWorkNames
@@ -1827,6 +1829,11 @@ open class DeckPicker :
      */
     private fun onFinishedStartup() {
         launchCatchingTask {
+            if (withProgress { BundledDeck.importIfNeeded(this@DeckPicker) }) {
+                updateDeckList()
+            }
+        }
+        launchCatchingTask {
             if (!automaticSync()) {
                 BackupPromptDialog.showIfAvailable(this@DeckPicker)
             }
@@ -2189,6 +2196,7 @@ open class DeckPicker :
         CardBrowser.clearLastDeckId()
         viewModel.focusedDeck = did
 
+        withCol { NewCardMix.ensureAvailable(this) }
         // TODO: Reuse dueTree from ViewModel instead of recalculating for better performance.
         val deck = withCol { sched.deckDueTree().find(did) }
         if (deck?.hasCardsReadyToStudy() == true) {
