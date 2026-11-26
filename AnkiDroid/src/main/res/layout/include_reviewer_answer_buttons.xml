@@ -9,6 +9,7 @@
     <!-- "Type in the answer" bar -->
     <com.ichi2.ui.FixedEditText
         android:id="@+id/answer_field"
+        style="@style/Woerter_AnswerField"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/type_answer_hint"

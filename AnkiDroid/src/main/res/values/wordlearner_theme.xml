@@ -39,6 +39,7 @@
         <item name="progressDialogButtonTextColor">@color/wl_ink</item>
         <item name="incrementerButtonBackground">@color/wl_ink</item>
         <item name="snackbarButtonTextColor">@color/wl_gold</item>
+        <item name="snackbarBackgroundTintColor">@color/wl_ink</item>
         <item name="editTextHighlightColor">@color/wl_tonal</item>
 
         <!-- study screen: ink frame around a paper card -->
@@ -61,6 +62,24 @@
         <item name="hardButtonRippleRef">@drawable/wl_answer_button</item>
         <item name="goodButtonRippleRef">@drawable/wl_answer_button</item>
         <item name="easyButtonRippleRef">@drawable/wl_answer_button</item>
+    </style>
+
+    <!-- The typed answer: one word, centred like the word and the comparison on the answer side -->
+    <style name="Woerter_AnswerField">
+        <item name="android:background">@drawable/wl_answer_field</item>
+        <item name="android:layout_marginStart">16dp</item>
+        <item name="android:layout_marginEnd">16dp</item>
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:layout_marginBottom">10dp</item>
+        <item name="android:paddingStart">16dp</item>
+        <item name="android:paddingEnd">16dp</item>
+        <item name="android:paddingTop">12dp</item>
+        <item name="android:paddingBottom">12dp</item>
+        <item name="android:minHeight">56dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:textColorHint">?android:attr/textColorSecondary</item>
     </style>
 
     <!-- "Начать учиться" on the deck list -->

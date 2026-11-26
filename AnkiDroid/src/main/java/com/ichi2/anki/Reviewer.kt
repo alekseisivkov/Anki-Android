@@ -139,6 +139,7 @@ import com.ichi2.anki.utils.ext.setUserFlagForCards
 import com.ichi2.anki.utils.ext.showDialogFragment
 import com.ichi2.anki.utils.remainingTime
 import com.ichi2.anki.wordlearner.NewCardMix
+import com.ichi2.anki.wordlearner.WordGestures
 import com.ichi2.themes.Themes
 import com.ichi2.themes.Themes.currentTheme
 import com.ichi2.utils.Permissions.canRecordAudio
@@ -1469,6 +1470,16 @@ open class Reviewer :
         }
     }
 
+    /** A gesture on a word card: see [WordGestures.resolve] */
+    private fun wordGesture(which: ViewerCommand): ViewerCommand? =
+        WordGestures.resolve(
+            which,
+            typed = typeAnswer?.correct != null,
+            verdict = typeAnswer?.verdict,
+            answerShown = isDisplayingAnswer,
+            keyboardUp = ViewCompat.getRootWindowInsets(window.decorView)?.isVisible(ime()) == true,
+        )
+
     /** A typed word is already graded: continue, or overrule a wrong answer */
     private fun showTypedAnswerButtons() {
         val verdict = typeAnswer?.verdict ?: return
@@ -1657,6 +1668,12 @@ open class Reviewer :
         answerTimer.setupForCard(getColUnsafe, currentCard!!)
         delayedHide(100)
         super.displayCardQuestion()
+        if (typeAnswer?.forgiving == true && typeAnswer?.correct == null && WordGestures.takeHint(sharedPrefs())) {
+            showSnackbar(R.string.wordlearner_gesture_hint, WORD_GESTURE_HINT_TIME) {
+                anchorView = findViewById(R.id.bottom_area_layout)
+                setAction(R.string.wordlearner_gesture_hint_ok) { }
+            }
+        }
     }
 
     @VisibleForTesting
@@ -1743,6 +1760,10 @@ open class Reviewer :
         which: ViewerCommand,
         fromGesture: Gesture?,
     ): Boolean {
+        if (fromGesture != null && typeAnswer?.forgiving == true) {
+            val resolved = wordGesture(which) ?: return false
+            if (resolved != which) return executeCommand(resolved, fromGesture)
+        }
         when (which) {
             ViewerCommand.TOGGLE_FLAG_RED -> {
                 toggleFlag(Flag.RED)
@@ -2169,6 +2190,7 @@ open class Reviewer :
 
         /** Default (500ms) time for action snackbars, such as undo, bury and suspend */
         const val ACTION_SNACKBAR_TIME = 500
+        private const val WORD_GESTURE_HINT_TIME = 10_000
 
         private val flagItemIds: Set<Int> = Flag.entries.map { it.id }.toSet()
 

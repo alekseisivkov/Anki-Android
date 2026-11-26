@@ -5,4 +5,7 @@
     <string name="wordlearner_actually_correct" translatable="false">Всё-таки верно</string>
     <string name="wordlearner_start" translatable="false">Начать учиться</string>
     <string name="wordlearner_no_deck" translatable="false">Колода «Deutsch» не найдена</string>
+    <string name="wordlearner_answer_hint" translatable="false">Слово по-немецки</string>
+    <string name="wordlearner_gesture_hint" translatable="false">Касание карточки — ответ. Свайп вправо — помню, влево — не помню.</string>
+    <string name="wordlearner_gesture_hint_ok" translatable="false">Понятно</string>
 </resources>

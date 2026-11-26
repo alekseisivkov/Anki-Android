@@ -153,6 +153,8 @@ import com.ichi2.anki.utils.OnlyOnce.Method.ANSWER_CARD
 import com.ichi2.anki.utils.OnlyOnce.preventSimultaneousExecutions
 import com.ichi2.anki.utils.ext.isTouchWithinBounds
 import com.ichi2.anki.utils.ext.showDialogFragment
+import com.ichi2.anki.wordlearner.WordAnswerField
+import com.ichi2.anki.wordlearner.WordGestures
 import com.ichi2.themes.Themes
 import com.ichi2.ui.FixedEditText
 import com.ichi2.utils.Stopwatch
@@ -759,6 +761,7 @@ abstract class AbstractFlashcardViewer :
             } else {
                 field.imeOptions and EditorInfo.IME_FLAG_NO_EXTRACT_UI.inv()
             }
+        field.hint = if (typeAnswer?.forgiving == true) WordAnswerField.hint(this) else getString(R.string.type_answer_hint)
         if (field.inputType != targetInputType || field.imeOptions != targetImeOptions) {
             field.inputType = targetInputType
             field.imeOptions = targetImeOptions
@@ -1271,6 +1274,7 @@ abstract class AbstractFlashcardViewer :
         prefShowTopbar = preferences.getBoolean("showTopbar", true)
         largeAnswerButtons = preferences.getBoolean("showLargeAnswerButtons", false)
         doubleTapTimeInterval = Prefs.doubleTapInterval
+        WordGestures.setUpOnce(preferences)
         gesturesEnabled = preferences.getBoolean(GestureProcessor.PREF_KEY, false)
         if (gesturesEnabled) {
             gestureProcessor.init(preferences)
