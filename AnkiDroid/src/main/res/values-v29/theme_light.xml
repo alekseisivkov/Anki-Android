@@ -16,7 +16,8 @@
   -->
 
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="DuplicateCrowdInStrings">
-    <style name="Base.V29.Light" parent="@style/Base.Theme.Light">
+    <!-- Wörter: our colours, see wordlearner_theme.xml -->
+    <style name="Base.V29.Light" parent="@style/Woerter_Light">
         <item name="colorSurfaceContainer">@color/faded_primary</item>
     </style>
 

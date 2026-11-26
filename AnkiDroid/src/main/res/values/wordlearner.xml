@@ -3,4 +3,6 @@
 <resources>
     <string name="wordlearner_next" translatable="false">Дальше</string>
     <string name="wordlearner_actually_correct" translatable="false">Всё-таки верно</string>
+    <string name="wordlearner_start" translatable="false">Начать учиться</string>
+    <string name="wordlearner_no_deck" translatable="false">Колода «Deutsch» не найдена</string>
 </resources>

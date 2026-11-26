@@ -196,6 +196,7 @@ import com.ichi2.anki.widgets.DeckAdapter
 import com.ichi2.anki.widgets.DeckHierarchyLinesDecoration
 import com.ichi2.anki.wordlearner.BundledDeck
 import com.ichi2.anki.wordlearner.NewCardMix
+import com.ichi2.anki.wordlearner.StartStudyingButton
 import com.ichi2.anki.worker.SyncMediaWorker
 import com.ichi2.anki.worker.SyncWorker
 import com.ichi2.anki.worker.UniqueWorkNames
@@ -590,6 +591,11 @@ open class DeckPicker :
                         closeFloatingActionBarBackPressCallback.isEnabled = isOpening
                     }
             }
+        StartStudyingButton.attach(
+            floatingActionButtonBinding.root,
+            floatingActionButtonBinding.fabMain,
+            floatingActionButtonBinding.fabBGLayout,
+        ) { launchCatchingTask { startStudying() } }
 
         shortAnimDuration = resources.getInteger(android.R.integer.config_shortAnimTime)
 
@@ -2357,6 +2363,24 @@ open class DeckPicker :
     private fun openReviewer() {
         Timber.i("Opening Reviewer")
         reviewLauncher.navigate(ReviewDeckDestination.CurrentDeck)
+    }
+
+    /** "Начать учиться": the word deck, straight into the study screen */
+    @VisibleForTesting
+    suspend fun startStudying() {
+        Timber.i("DeckPicker:: start studying")
+        val did =
+            withCol { StartStudyingButton.deckToStudy(this) }
+                ?: run {
+                    // the button was tapped before the import at startup had finished, or it failed
+                    withProgress { BundledDeck.importIfNeeded(this@DeckPicker) }
+                    withCol { StartStudyingButton.deckToStudy(this) }
+                }
+        if (did == null) {
+            showSnackbar(R.string.wordlearner_no_deck)
+            return
+        }
+        handleDeckSelection(did, DeckSelectionType.SKIP_STUDY_OPTIONS)
     }
 
     private fun createSubDeckDialog(did: DeckId) {

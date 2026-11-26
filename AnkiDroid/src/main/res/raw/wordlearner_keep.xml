@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Wörter has its own launcher icon (wl_launcher_*); AnkiDroid's stays in the sources unchanged -->
+<resources xmlns:tools="http://schemas.android.com/tools"
+    tools:keep="@drawable/ic_launcher_background,@drawable/ic_launcher_foreground,@drawable/ic_launcher_monochrome,@color/anki_foreground_icon_color_0,@color/anki_foreground_icon_color_1" />

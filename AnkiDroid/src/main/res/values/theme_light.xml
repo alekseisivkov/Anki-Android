@@ -178,5 +178,6 @@
         <item name="whiteboardToolbarCardStyle">?attr/materialCardViewStyle</item>
     </style>
 
-    <style name="Theme_Light" parent="Base.Theme.Light"/>
+    <!-- Wörter: our colours, see wordlearner_theme.xml -->
+    <style name="Theme_Light" parent="Woerter_Light"/>
 </resources>

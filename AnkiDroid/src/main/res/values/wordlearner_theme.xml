@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Personal fork "Wörter": warm paper and ink instead of light blue.
+  Blue, red and green mean der/die/das on the cards, so the chrome stays neutral
+  and the answer buttons only carry a muted hint of their meaning.
+-->
+<resources>
+    <color name="wl_ink">#24212A</color>
+    <color name="wl_ink_raised">#3A3640</color>
+    <color name="wl_paper">#FBFAF7</color>
+    <color name="wl_paper_selected">#EFECE5</color>
+    <color name="wl_tonal">#ECE8DF</color>
+    <color name="wl_gold">#F2B33D</color>
+    <color name="wl_gold_pressed">#E0A12C</color>
+    <color name="wl_again">#5A2E2B</color>
+    <color name="wl_again_text">#FFD9D3</color>
+    <color name="wl_hard_text">#ECE8F2</color>
+    <color name="wl_good">#24452F</color>
+    <color name="wl_good_text">#CFEFD8</color>
+    <color name="wl_easy">#263D57</color>
+    <color name="wl_easy_text">#D5E5FA</color>
+
+    <style name="Woerter_Light" parent="Base.Theme.Light">
+        <item name="colorPrimary">@color/wl_ink</item>
+        <item name="colorPrimaryDark">@color/wl_ink</item>
+        <item name="colorAccent">@color/wl_ink_raised</item>
+        <item name="colorSecondaryContainer">@color/wl_tonal</item>
+        <item name="colorSurface">@color/wl_paper</item>
+        <item name="colorSurfaceContainerHigh">#F3F1EC</item>
+        <item name="colorSurfaceContainer">#0F24212A</item>
+        <item name="android:colorBackground">@color/wl_paper</item>
+        <item name="android:windowBackground">@color/wl_paper</item>
+        <item name="preferenceCategoryTitleTextColor">@color/wl_ink</item>
+        <item name="currentDeckBackgroundColor">@color/wl_paper_selected</item>
+        <item name="focusedRowBackgroundColor">@color/wl_paper_selected</item>
+        <item name="fab_normal">@color/wl_ink</item>
+        <item name="fab_pressed">@color/wl_ink_raised</item>
+        <item name="customTabNavBarColor">@color/wl_ink</item>
+        <item name="progressDialogButtonTextColor">@color/wl_ink</item>
+        <item name="incrementerButtonBackground">@color/wl_ink</item>
+        <item name="snackbarButtonTextColor">@color/wl_gold</item>
+        <item name="editTextHighlightColor">@color/wl_tonal</item>
+
+        <!-- study screen: ink frame around a paper card -->
+        <item name="topBarColor">@color/wl_paper</item>
+        <item name="showAnswerColor">@color/wl_ink</item>
+        <item name="showAnswerButtonBackground">@color/wl_ink_raised</item>
+        <item name="againButtonBackground">@color/wl_again</item>
+        <item name="hardButtonBackground">@color/wl_ink_raised</item>
+        <item name="goodButtonBackground">@color/wl_good</item>
+        <item name="easyButtonBackground">@color/wl_easy</item>
+        <item name="againButtonTextColor">@color/wl_again_text</item>
+        <item name="hardButtonTextColor">@color/wl_hard_text</item>
+        <item name="goodButtonTextColor">@color/wl_good_text</item>
+        <item name="easyButtonTextColor">@color/wl_easy_text</item>
+        <item name="againButtonRef">@drawable/wl_answer_button</item>
+        <item name="hardButtonRef">@drawable/wl_answer_button</item>
+        <item name="goodButtonRef">@drawable/wl_answer_button</item>
+        <item name="easyButtonRef">@drawable/wl_answer_button</item>
+        <item name="againButtonRippleRef">@drawable/wl_answer_button</item>
+        <item name="hardButtonRippleRef">@drawable/wl_answer_button</item>
+        <item name="goodButtonRippleRef">@drawable/wl_answer_button</item>
+        <item name="easyButtonRippleRef">@drawable/wl_answer_button</item>
+    </style>
+
+    <!-- "Начать учиться" on the deck list -->
+    <style name="Woerter_StartButton" parent="Widget.Material3.Button.Icon">
+        <item name="android:layout_height">56dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:textSize">17sp</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="android:fontFamily">@string/font_fontFamily_medium</item>
+        <item name="android:textColor">@color/wl_ink</item>
+        <item name="backgroundTint">@color/wl_start_button</item>
+        <item name="iconTint">@color/wl_ink</item>
+        <item name="iconSize">26dp</item>
+        <item name="iconPadding">10dp</item>
+        <item name="cornerRadius">16dp</item>
+        <item name="elevation">3dp</item>
+        <item name="android:stateListAnimator">@null</item>
+    </style>
+</resources>
