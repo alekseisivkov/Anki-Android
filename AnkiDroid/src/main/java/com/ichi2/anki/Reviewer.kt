@@ -75,6 +75,7 @@ import com.ichi2.anki.CollectionManager.withCol
 import com.ichi2.anki.Whiteboard.Companion.createInstance
 import com.ichi2.anki.Whiteboard.OnPaintColorChangeListener
 import com.ichi2.anki.cardviewer.Gesture
+import com.ichi2.anki.cardviewer.GestureProcessor
 import com.ichi2.anki.cardviewer.ViewerCommand
 import com.ichi2.anki.common.annotations.NeedsTest
 import com.ichi2.anki.common.crashreporting.CrashReportService
@@ -140,6 +141,8 @@ import com.ichi2.anki.utils.ext.showDialogFragment
 import com.ichi2.anki.utils.remainingTime
 import com.ichi2.anki.wordlearner.NewCardMix
 import com.ichi2.anki.wordlearner.WordGestures
+import com.ichi2.anki.wordlearner.WordSwipe
+import com.ichi2.anki.wordlearner.WordSwipeLogic
 import com.ichi2.themes.Themes
 import com.ichi2.themes.Themes.currentTheme
 import com.ichi2.utils.Permissions.canRecordAudio
@@ -1477,8 +1480,33 @@ open class Reviewer :
             typed = typeAnswer?.correct != null,
             verdict = typeAnswer?.verdict,
             answerShown = isDisplayingAnswer,
-            keyboardUp = ViewCompat.getRootWindowInsets(window.decorView)?.isVisible(ime()) == true,
+            keyboardUp = isKeyboardUp(),
         )
+
+    private fun isKeyboardUp() = ViewCompat.getRootWindowInsets(window.decorView)?.isVisible(ime()) == true
+
+    private var wordSwipe: WordSwipe? = null
+    private var wordGestureHint: Snackbar? = null
+
+    private val wordSwipeHost =
+        object : WordSwipe.Host {
+            override fun swipeOutcomes(): WordSwipeLogic.Outcomes? {
+                if (typeAnswer?.forgiving != true || !sharedPrefs().getBoolean(GestureProcessor.PREF_KEY, false)) return null
+                return WordSwipeLogic.outcomes(
+                    typed = typeAnswer?.correct != null,
+                    verdict = typeAnswer?.verdict,
+                    answerShown = isDisplayingAnswer,
+                    keyboardUp = isKeyboardUp(),
+                )
+            }
+
+            override fun perform(outcome: WordSwipeLogic.Outcome) {
+                wordGestureHint?.dismiss()
+                executeCommand(outcome.command, null)
+            }
+        }
+
+    override fun interceptCardTouch(event: MotionEvent): Boolean = wordSwipe?.onTouch(event) == true
 
     /** A typed word is already graded: continue, or overrule a wrong answer */
     private fun showTypedAnswerButtons() {
@@ -1580,6 +1608,7 @@ open class Reviewer :
 
     override fun onPageFinished(view: WebView) {
         super.onPageFinished(view)
+        wordSwipe?.onCardShown()
         onFlagChanged()
         onMarkChanged()
         if (!displayAnswer) {
@@ -1670,6 +1699,7 @@ open class Reviewer :
         super.displayCardQuestion()
         if (typeAnswer?.forgiving == true && typeAnswer?.correct == null && WordGestures.takeHint(sharedPrefs())) {
             showSnackbar(R.string.wordlearner_gesture_hint, WORD_GESTURE_HINT_TIME) {
+                wordGestureHint = this
                 anchorView = findViewById(R.id.bottom_area_layout)
                 setAction(R.string.wordlearner_gesture_hint_ok) { }
             }
@@ -1722,6 +1752,11 @@ open class Reviewer :
 
     override fun initLayout() {
         super.initLayout()
+        wordSwipe =
+            WordSwipe(findViewById(R.id.flashcard), wordSwipeHost) { cancel ->
+                gestureDetector?.onTouchEvent(cancel)
+                processCardAction { it?.dispatchTouchEvent(cancel) }
+            }
         if (!showRemainingCardCount) {
             textBarNew.visibility = View.GONE
             textBarLearn.visibility = View.GONE

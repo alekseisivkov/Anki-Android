@@ -461,8 +461,13 @@ abstract class AbstractFlashcardViewer :
     @get:VisibleForTesting
     protected open val elapsedRealTime: Long
         get() = SystemClock.elapsedRealtime()
+
+    /** @return whether a subclass takes the touch of the card, e.g. for a swipe of the card */
+    protected open fun interceptCardTouch(event: MotionEvent): Boolean = false
+
     private val gestureListener =
         OnTouchListener { _, event ->
+            if (interceptCardTouch(event)) return@OnTouchListener true
             if (gestureDetector!!.onTouchEvent(event)) {
                 return@OnTouchListener true
             }

@@ -6,6 +6,11 @@
     <string name="wordlearner_start" translatable="false">Начать учиться</string>
     <string name="wordlearner_no_deck" translatable="false">Колода «Deutsch» не найдена</string>
     <string name="wordlearner_answer_hint" translatable="false">Слово по-немецки</string>
-    <string name="wordlearner_gesture_hint" translatable="false">Касание карточки — ответ. Свайп вправо — помню, влево — не помню.</string>
+    <string name="wordlearner_gesture_hint" translatable="false">Тяните карточку: вправо — помню, влево — не помню. Касание — ответ.</string>
     <string name="wordlearner_gesture_hint_ok" translatable="false">Понятно</string>
+    <string name="wordlearner_swipe_show_answer" translatable="false">Показать ответ</string>
+    <string name="wordlearner_swipe_remembered" translatable="false">Помню →</string>
+    <string name="wordlearner_swipe_forgotten" translatable="false">← Не помню</string>
+    <string name="wordlearner_swipe_next_correct" translatable="false">Дальше · верно</string>
+    <string name="wordlearner_swipe_next_wrong" translatable="false">Дальше · не помню</string>
 </resources>

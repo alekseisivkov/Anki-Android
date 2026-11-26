@@ -19,6 +19,8 @@
     <color name="wl_good_text">#CFEFD8</color>
     <color name="wl_easy">#263D57</color>
     <color name="wl_easy_text">#D5E5FA</color>
+    <color name="wl_swipe_good">#2E7A4E</color>
+    <color name="wl_swipe_again">#B3382D</color>
 
     <style name="Woerter_Light" parent="Base.Theme.Light">
         <item name="colorPrimary">@color/wl_ink</item>
