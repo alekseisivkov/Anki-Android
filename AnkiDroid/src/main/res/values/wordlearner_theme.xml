@@ -21,6 +21,10 @@
     <color name="wl_easy_text">#D5E5FA</color>
     <color name="wl_swipe_good">#2E7A4E</color>
     <color name="wl_swipe_again">#B3382D</color>
+    <color name="wl_ink_soft">#4A4550</color>
+    <color name="wl_muted">#6E6873</color>
+    <color name="wl_panel">#F2EFE9</color>
+    <color name="wl_progress_track">#E4DED3</color>
 
     <style name="Woerter_Light" parent="Base.Theme.Light">
         <item name="colorPrimary">@color/wl_ink</item>
@@ -100,5 +104,61 @@
         <item name="cornerRadius">16dp</item>
         <item name="elevation">3dp</item>
         <item name="android:stateListAnimator">@null</item>
+    </style>
+
+    <!-- The progress screen: Literata numerals, Roboto words -->
+    <style name="Woerter_Progress" />
+    <style name="Woerter_Progress.Hero">
+        <item name="android:fontFamily">@font/wl_literata_display</item>
+        <item name="android:textSize">68sp</item>
+        <item name="android:textColor">@color/wl_ink</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:letterSpacing">-0.02</item>
+    </style>
+    <style name="Woerter_Progress.HeroLabel">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/wl_ink_soft</item>
+    </style>
+    <style name="Woerter_Progress.Note">
+        <item name="android:textSize">15sp</item>
+        <item name="android:lineSpacingMultiplier">1.15</item>
+        <item name="android:textColor">@color/wl_muted</item>
+    </style>
+    <style name="Woerter_Progress.Heading">
+        <item name="android:textSize">20sp</item>
+        <item name="android:fontFamily">@string/font_fontFamily_medium</item>
+        <item name="android:textColor">@color/wl_ink</item>
+    </style>
+    <style name="Woerter_Progress.LegendValue">
+        <item name="android:textSize">18sp</item>
+        <item name="android:fontFamily">@string/font_fontFamily_medium</item>
+        <item name="android:textColor">@color/wl_ink</item>
+        <item name="android:fontFeatureSettings">tnum</item>
+    </style>
+    <style name="Woerter_Progress.LegendLabel">
+        <item name="android:textSize">13sp</item>
+        <item name="android:textColor">@color/wl_muted</item>
+        <item name="android:drawablePadding">6dp</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
+    <style name="Woerter_Progress.TileValue">
+        <item name="android:fontFamily">@font/wl_literata_numbers</item>
+        <item name="android:textSize">30sp</item>
+        <item name="android:textColor">@color/wl_ink</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+    <style name="Woerter_Progress.TileLabel">
+        <item name="android:textSize">13sp</item>
+        <item name="android:textColor">@color/wl_muted</item>
+        <item name="android:layout_marginTop">4dp</item>
+    </style>
+    <style name="Woerter_Progress.RowLabel">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/wl_ink_soft</item>
+    </style>
+    <style name="Woerter_Progress.RowValue">
+        <item name="android:textSize">16sp</item>
+        <item name="android:fontFamily">@string/font_fontFamily_medium</item>
+        <item name="android:textColor">@color/wl_ink</item>
     </style>
 </resources>

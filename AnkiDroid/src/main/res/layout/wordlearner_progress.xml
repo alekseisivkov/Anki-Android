@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Wörter: the screen which the app opens with. The course goal, the day, what comes next,
+  and "Начать учиться" at the bottom. The deck list is one tap away in the toolbar.
+-->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/wordlearner_progress"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/wl_paper">
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/wl_progress_scroll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingBottom="104dp">
+
+        <LinearLayout
+            android:id="@+id/wl_progress_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:alpha="0"
+            android:orientation="vertical"
+            android:paddingStart="24dp"
+            android:paddingTop="28dp"
+            android:paddingEnd="24dp">
+
+            <!-- the course goal -->
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="40dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/wl_hero_number"
+                        style="@style/Woerter_Progress.Hero"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        tools:text="12" />
+
+                    <TextView
+                        android:id="@+id/wl_hero_label"
+                        style="@style/Woerter_Progress.HeroLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="-6dp"
+                        tools:text="слов запомнено из 2391" />
+                </LinearLayout>
+
+                <ImageButton
+                    android:id="@+id/wl_help"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_gravity="top|end"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="-12dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/wordlearner_progress_help"
+                    android:src="@drawable/help_outline"
+                    app:tint="@color/wl_muted" />
+            </FrameLayout>
+
+            <com.ichi2.anki.wordlearner.SegmentBar
+                android:id="@+id/wl_bar"
+                android:layout_width="match_parent"
+                android:layout_height="12dp"
+                android:layout_marginTop="22dp" />
+
+            <LinearLayout
+                android:id="@+id/wl_legend"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/wl_remembered"
+                        style="@style/Woerter_Progress.LegendValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        tools:text="12" />
+
+                    <TextView
+                        style="@style/Woerter_Progress.LegendLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableStart="@drawable/wl_dot_remembered"
+                        android:text="@string/wordlearner_progress_remembered" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/wl_in_progress"
+                        style="@style/Woerter_Progress.LegendValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        tools:text="45" />
+
+                    <TextView
+                        style="@style/Woerter_Progress.LegendLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableStart="@drawable/wl_dot_in_progress"
+                        android:text="@string/wordlearner_progress_in_progress" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/wl_ahead"
+                        style="@style/Woerter_Progress.LegendValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        tools:text="2334" />
+
+                    <TextView
+                        style="@style/Woerter_Progress.LegendLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableStart="@drawable/wl_dot_ahead"
+                        android:text="@string/wordlearner_progress_ahead" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/wl_help_text"
+                style="@style/Woerter_Progress.Note"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:background="@drawable/wl_progress_panel"
+                android:padding="16dp"
+                android:textColor="@color/wl_ink_soft"
+                android:visibility="gone"
+                tools:text="Запомнено — слово, обе карточки которого…"
+                tools:visibility="visible" />
+
+            <TextView
+                android:id="@+id/wl_hero_note"
+                style="@style/Woerter_Progress.Note"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="28dp"
+                android:visibility="gone"
+                tools:text="Начните учиться — и здесь появятся запомненные слова." />
+
+            <!-- the day -->
+            <LinearLayout
+                android:id="@+id/wl_today"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:baselineAligned="true"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/Woerter_Progress.Heading"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/wordlearner_progress_today" />
+
+                    <TextView
+                        android:id="@+id/wl_current"
+                        style="@style/Woerter_Progress.TileLabel"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:layout_weight="1"
+                        android:gravity="end"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        tools:text="A2, урок 1, часть 2" />
+                </LinearLayout>
+
+                <GridLayout
+                    android:id="@+id/wl_tiles"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:background="@drawable/wl_progress_panel"
+                    android:columnCount="2"
+                    android:paddingStart="18dp"
+                    android:paddingTop="18dp"
+                    android:paddingEnd="8dp"
+                    android:paddingBottom="4dp"
+                    android:useDefaultMargins="false" />
+            </LinearLayout>
+
+            <!-- what comes next -->
+            <LinearLayout
+                android:id="@+id/wl_next"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="36dp"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/Woerter_Progress.Heading"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
+                    android:text="@string/wordlearner_progress_next" />
+
+                <LinearLayout
+                    android:id="@+id/wl_rows"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:divider="@drawable/wl_divider"
+                    android:orientation="vertical"
+                    android:showDividers="middle" />
+
+                <TextView
+                    android:id="@+id/wl_outlook"
+                    style="@style/Woerter_Progress.Note"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    tools:text="При таком темпе весь курс будет начат к марту 2028 года." />
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <FrameLayout
+        android:id="@+id/wl_progress_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="@drawable/wl_progress_fade"
+        android:paddingStart="16dp"
+        android:paddingTop="28dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="16dp">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/wl_progress_start"
+            style="@style/Woerter_StartButton"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:text="@string/wordlearner_start"
+            app:icon="@drawable/round_play_arrow_24"
+            app:iconGravity="textStart" />
+    </FrameLayout>
+</FrameLayout>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Wörter: switches between the progress screen and the deck list -->
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/wordlearner_show_decks"
+        android:icon="@drawable/ic_view_list_white_24dp"
+        android:title="@string/wordlearner_decks"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/wordlearner_show_progress"
+        android:icon="@drawable/ic_bar_chart_black"
+        android:title="@string/wordlearner_progress"
+        app:showAsAction="always" />
+</menu>

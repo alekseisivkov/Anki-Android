@@ -13,4 +13,12 @@
     <string name="wordlearner_swipe_forgotten" translatable="false">← Не помню</string>
     <string name="wordlearner_swipe_next_correct" translatable="false">Дальше · верно</string>
     <string name="wordlearner_swipe_next_wrong" translatable="false">Дальше · не помню</string>
+    <string name="wordlearner_decks" maxLength="28" translatable="false">Колоды</string>
+    <string name="wordlearner_progress" maxLength="28" translatable="false">Прогресс</string>
+    <string name="wordlearner_progress_help" translatable="false">Как считается</string>
+    <string name="wordlearner_progress_remembered" translatable="false">запомнено</string>
+    <string name="wordlearner_progress_in_progress" translatable="false">в процессе</string>
+    <string name="wordlearner_progress_ahead" translatable="false">впереди</string>
+    <string name="wordlearner_progress_today" translatable="false">Сегодня</string>
+    <string name="wordlearner_progress_next" translatable="false">Дальше</string>
 </resources>

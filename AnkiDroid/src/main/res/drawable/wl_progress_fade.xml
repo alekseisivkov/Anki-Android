@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- the start button rests on the paper; text scrolling under it fades out -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <gradient
+        android:angle="90"
+        android:startColor="@color/wl_paper"
+        android:centerColor="@color/wl_paper"
+        android:centerY="0.7"
+        android:endColor="#00FBFAF7" />
+</shape>

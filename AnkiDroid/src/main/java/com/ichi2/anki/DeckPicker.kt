@@ -196,6 +196,7 @@ import com.ichi2.anki.widgets.DeckAdapter
 import com.ichi2.anki.widgets.DeckHierarchyLinesDecoration
 import com.ichi2.anki.wordlearner.BundledDeck
 import com.ichi2.anki.wordlearner.NewCardMix
+import com.ichi2.anki.wordlearner.ProgressScreen
 import com.ichi2.anki.wordlearner.StartStudyingButton
 import com.ichi2.anki.worker.SyncMediaWorker
 import com.ichi2.anki.worker.SyncWorker
@@ -297,6 +298,10 @@ open class DeckPicker :
 
     @VisibleForTesting
     lateinit var floatingActionMenu: DeckPickerFloatingActionMenu
+
+    /** Wörter: the screen the app opens with, in place of the deck list */
+    @VisibleForTesting
+    val progressScreen = ProgressScreen(this) { launchCatchingTask { startStudying() } }
 
     var activeSnackBar: Snackbar? = null
     private val activeSnackbarCallback =
@@ -596,6 +601,7 @@ open class DeckPicker :
             floatingActionButtonBinding.fabMain,
             floatingActionButtonBinding.fabBGLayout,
         ) { launchCatchingTask { startStudying() } }
+        progressScreen.attach(deckPickerBinding.root)
 
         shortAnimDuration = resources.getInteger(android.R.integer.config_shortAnimTime)
 
@@ -651,6 +657,7 @@ open class DeckPicker :
     override fun setupBackPressedCallbacks() {
         onBackPressedDispatcher.addCallback(this, exitAndSyncBackCallback)
         onBackPressedDispatcher.addCallback(this, exitViaDoubleTapBackCallback())
+        onBackPressedDispatcher.addCallback(this, progressScreen.backCallback)
         onBackPressedDispatcher.addCallback(this, closeFloatingActionBarBackPressCallback)
         super.setupBackPressedCallbacks()
     }
@@ -903,6 +910,7 @@ open class DeckPicker :
             hideProgressBar()
             // TODO: Refresh deck metadata in the reminder pane
             fragment?.refreshInterface()
+            progressScreen.refresh()
         }
 
         fun onStartupResponse(response: StartupResponse) {
@@ -1331,7 +1339,7 @@ open class DeckPicker :
 
     private fun updateSearchVisibilityFromState(menu: Menu) {
         viewModel.optionsMenuState?.run {
-            menu.findItem(R.id.deck_picker_action_filter)?.isVisible = searchIcon
+            menu.findItem(R.id.deck_picker_action_filter)?.isVisible = searchIcon && !progressScreen.isShown
         }
     }
 

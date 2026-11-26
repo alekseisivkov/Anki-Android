@@ -27,6 +27,9 @@ object BundledDeck {
     private const val VERSION = "version.txt"
     private const val PREF_VERSION = "wordlearner_deck_version"
 
+    /** Whether a version of the deck was imported completely before */
+    fun wasImported(context: Context): Boolean = context.sharedPrefs().getString(PREF_VERSION, null) != null
+
     /** @return whether the deck was imported */
     suspend fun importIfNeeded(context: Context): Boolean {
         val version = bundledVersion(context) ?: return false

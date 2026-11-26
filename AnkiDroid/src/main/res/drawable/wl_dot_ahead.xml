@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- legend of the course bar -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="oval">
+    <size android:width="10dp" android:height="10dp" />
+    <solid android:color="@color/wl_progress_track" />
+</shape>
